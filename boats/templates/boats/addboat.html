@@ -1,0 +1,237 @@
+{% extends "base_site.html" %}
+{% load humanize %}
+{% block title %} New Boat {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="right_col" role="main">
+
+    <div class="page-title">
+        <div class="title_left">
+          <h3>New Boat</h3>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_title">
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a id="boat_edit" href="#"><i class="fa fa-pencil"></i></a>
+                  
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+          
+          <div class="x_content">
+            <div class="row">
+              <form id="boat_form" method="post" action="{% url 'boats:create_boat' %}" data-parsley-validate class="form-horizontal form-label-left">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Boat Registration <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="id_boat_registration" name="boat_registration" type="text" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Build Date <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="id_build_date" name="build_date" type="text" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Hull Colour <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="hull_colour" required="required" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Owner <span class="required">*</span>
+                  </label>
+                  <div class="col-md-3 col-sm-3 col-xs-12">
+                    <input type="text" id="id_owner" name="owner" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                  <label class="control-label col-md-2 col-sm-2 col-xs-12" for="first-name">Current Value <span class="required">*</span>
+                  </label>
+                  <div class="col-md-1 col-sm-1 col-xs-12">
+                    <input type="text" id="id_current_value" name="current_value" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Insured</label>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <div id="gender" class="btn-group" data-toggle="buttons">
+                      <label id="yes_button" class="btn btn-default active" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                        <input type="radio" name="gender" value="Yes"> Yes
+                      </label>
+                      <label id="no_button" class="btn btn-default" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                        <input type="radio"  name="gender" value="No"> No &nbsp
+                      </label>
+                      <input id="id_insured" value="No" name="insured" style="display: none;">
+                    </div>
+                  </div>
+                  <label class="control-label col-md-1 col-sm-1 col-xs-12" for="first-name">Policy <span class="required">*</span></label>
+                  <div class="col-md-3 col-sm-3 col-xs-12">
+                    <input type="text" id="id_insurance_policy" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Engine <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_engine_serial" name="engine_serial" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                    <button type="submit" class="btn btn-danger btn-round" id="submit_button" >Create Boat</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            
+        </div>
+      </div>
+    </div>   
+  </div>
+  
+
+</div>
+
+<script>
+function init_colours() {
+
+    var colours = { {% for col in hull_cols %}{{ col.id}} : "{{col.colour}} [{{ col.id }}]", {% endfor %}};
+
+    var coloursArray = $.map(colours, function(value, key) {
+        return {
+            value: value,
+            data: key
+        };
+    });
+
+    // initialize autocomplete with custom appendTo
+    $('#id_hull_colour').autocomplete({
+        lookup: coloursArray
+    });
+
+};
+
+function init_eng_ser() {
+
+    var serials = { {% for ser in eng_sers %}{{ ser.id}} : "{{ser.make}}: {{ser.serial_number}} [{{ser.id}}]", {% endfor %}};
+
+    var serialsArray = $.map(serials, function(value, key) {
+        return {
+            value: value,
+            data: key
+        };
+    });
+
+    // initialize autocomplete with custom appendTo
+    $('#id_engine_serial').autocomplete({
+        lookup: serialsArray
+    });
+
+};
+
+function init_owners() {
+
+    var owners = { {% for own in owners %}{{ own.id}} : "{{own.display_name}} [{{ own.id }}]", {% endfor %}};
+
+    var ownersArray = $.map(owners, function(value, key) {
+        return {
+            value: value,
+            data: key
+        };
+    });
+
+    // initialize autocomplete with custom appendTo
+    $('#id_owner').autocomplete({
+        lookup: ownersArray
+    });
+
+};
+
+
+</script>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- Chart.js -->
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- gauge.js -->
+  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
+  <!-- Skycons -->
+  <script src="/static/vendors/skycons/skycons.js"></script>
+  <!-- Flot -->
+  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <!-- Flot plugins -->
+  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <!-- DateJS -->
+  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- JQVMap -->
+  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
+  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+  <!-- Data Tables -->
+  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+  <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+  <!-- File Upload -->
+  <script src="/static/vendors/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+  <script src="/static/vendors/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+  <script src="/static/vendors/jquery-file-upload/js/jquery.fileupload.js"></script>
+
+  <script>
+    $(document).ready(function() {
+  init_colours();
+  init_eng_ser();
+  init_owners();
+
+ 
+
+    $("#no_button").on("click", function(event) {
+        $('#id_insured').val("No")  
+    });
+
+    $("#yes_button").on("click", function(event) {
+        $('#id_insured').val("Yes")  
+    });
+});
+  </script>
+
+{% endblock javascripts %}

@@ -1,0 +1,315 @@
+{% extends "base_site.html" %}
+{% load humanize %}
+{% block title %} {{ engine.serial_number }} {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="page-title">
+        <div class="title_left">
+          <h3>Engine: {{ engine.make }} {{ engine.serial_number }}</h3>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_title">
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a id="boat_edit" href="#"><i class="fa fa-pencil"></i></a>
+                  
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+          
+          <div class="x_content">
+            <div class="row">
+
+              <form id="boat_form" method="post" action="{% url 'boats:update_engine' engine.id %}" data-parsley-validate class="form-horizontal form-label-left">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Make <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="id_make" name="make" type="text" required="required" class="form-control col-md-7 col-xs-12" value="{{ engine.make }}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Serial Number <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_serial_number" name="serial_number" required="required" class="form-control col-md-7 col-xs-12" value="{{ engine.serial_number  }}">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Build Date <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+
+                    <input type="text" id="id_build_date" name="build_date" required="required" class="form-control col-md-7 col-xs-12" value="">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Next Service Due <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+
+                    <input type="text" id="id_build_date" name="bss" required="required" class="form-control col-md-7 col-xs-12" value="{{ engine.service_nat|naturaltime }} ({{ engine.next_service|date:'d/m/Y' }})" disabled="disabled">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Current Boat <span class="required">*</span>
+                  </label>
+                  <div class="col-md-4 col-sm-4 col-xs-12">
+                    <input type="text" id="id_current_boat" name="current_boat" required="required" class="form-control col-md-7 col-xs-12" value="{{ boat.hull_colour.colour }}">
+                  </div>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <a href="{% if engine.current_boat %}{% url 'boats:view_boat' engine.current_boat.id %}{% else %}#{% endif %}" class="btn btn-round btn-danger" style="width: 100%;" {% if not engine.current_boat %}disabled{% endif %}>View Boat</a>
+                  </div>
+                </div>
+                
+
+                <div id="btn-grp" style="display: none;">
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                    <button type="submit" class="btn btn-danger btn-round" id="submit_button" >Update Engine</button>
+                    <button type="submit" class="btn btn-danger btn-round" id="cancel_button" >Cancel Edit</button>
+                </div>
+                </div>
+                </div>
+              </form>
+            </div>
+            
+        </div>
+      </div>
+    </div>   
+  </div>
+  <div class="page-title">
+        <div class="title_left">
+          <h4>Service Record</h4>
+        </div>
+  </div>
+<div class="row">
+
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_title">
+            <h2>New Service</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+              <form  method="post" action="{% url 'boats:update_service' engine.id %}" data-parsley-validate class="form-horizontal form-label-left">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Service Date <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+
+                    <input type="text" id="id_service_date" name="service_date" required="required" class="form-control col-md-7 col-xs-12" value="">
+                  </div>
+                </div>
+              <div class="form-group">
+              <label class="control-label col-md-3 col-sm-3 col-xs-12">Service Notes</label>
+              <div class="col-md-6 col-sm-6 col-xs-12">
+                <textarea id="id_service_note" name="service_note" class="resizable_textarea form-control" ></textarea>
+              </div>
+              </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Next Date <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+
+                    <input type="text" id="id_next_service" name="next_service" required="required" class="form-control col-md-7 col-xs-12" value="">
+                  </div>
+                </div>
+
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                    <button type="submit" class="btn btn-danger btn-round" id="submit_button" >Update Service Record</button>
+                </div>
+                </div>
+                
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="row">
+
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_content">
+             <div class="x_title">
+            <h2>Service History</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+              <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th>Service Date</th>
+                    <th>Next Service</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+
+
+                <tbody>
+                  {% for service in services %}
+                  <tr>
+                    <td align="center">{{ service.service_date|date:"d/m/Y" }}</td>
+                    <td align="center">{{ service.next_service|date:"d/m/Y" }}</td>
+                    <td align="center">{{ service.notes }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<!-- -->
+ </div>
+
+<script>
+function init_boats() {
+
+    var boats = { {% for boat in boats %}{{ boat.id}} : "{{boat.registration }} [{{ boat.id }}]", {% endfor %}};
+
+    var boatsArray = $.map(boats, function(value, key) {
+        return {
+            value: value,
+            data: key
+        };
+    });
+
+    // initialize autocomplete with custom appendTo
+    {% if engine.current_boat %}
+    $('#id_current_boat').autocomplete({
+        lookup: boatsArray
+    }).val('{{ engine.current_boat.registration }} [{{ engine.current_boat.id }}]').data('autocomplete');
+    {% else %}
+    $('#id_current_boat').autocomplete({
+        lookup: boatsArray
+    })
+    {% endif %}
+
+};
+
+
+
+
+</script>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- Chart.js -->
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- gauge.js -->
+  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
+  <!-- Skycons -->
+  <script src="/static/vendors/skycons/skycons.js"></script>
+  <!-- Flot -->
+  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <!-- Flot plugins -->
+  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <!-- DateJS -->
+  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- JQVMap -->
+  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
+  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+  <!-- Data Tables -->
+  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+  <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+  <!-- File Upload -->
+  <script src="/static/vendors/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+  <script src="/static/vendors/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+  <script src="/static/vendors/jquery-file-upload/js/jquery.fileupload.js"></script>
+
+  <script>
+    $(document).ready(function() {
+  init_boats();
+
+
+  $('#id_make').attr("disabled", "disabled");
+  $('#id_serial_number').attr("disabled", "disabled");
+  $('#id_build_date').attr("disabled", "disabled");
+  $('#id_current_boat').attr("disabled", "disabled");
+
+  $("#boat_edit").button().click(function(event){
+        event.preventDefault()
+        $('#id_make').removeAttr("disabled");
+        $('#id_serial_number').removeAttr("disabled");
+        $('#id_build_date').removeAttr("disabled");
+        $('#id_current_boat').removeAttr("disabled");
+        $('#btn-grp').show();
+    });
+
+    $("#cancel_button").button().click(function(event){
+        event.preventDefault()
+        $('#id_make').attr("disabled", "disabled");
+        $('#id_serial_number').attr("disabled", "disabled");
+        $('#id_build_date').attr("disabled", "disabled");
+        $('#id_current_boat').attr("disabled", "disabled");
+        $('#btn-grp').hide();
+    });
+
+    $("#id_build_date").val("{{ engine.build_year|date:'d/m/Y' }}");
+
+});
+  </script>
+
+{% endblock javascripts %}

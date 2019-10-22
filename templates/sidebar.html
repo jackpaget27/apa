@@ -1,0 +1,79 @@
+<div class="left_col scroll-view">
+  <div class="navbar nav_title" style="border: 0;">
+    <a href="index.html" class="site_title"><i class="fa fa-spinner"></i> <span>Asia Powerboats</span></a>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <!-- menu profile quick info -->
+
+
+  <!-- /menu profile quick info -->
+
+  <br />
+
+  <!-- sidebar menu -->
+  <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+    <div class="menu_section">
+      <ul class="nav side-menu">
+        <li><a href="{% url 'racers:view_user' user.members_set.all.0.id %}"><i class="fa fa-user"></i> My Profile </a>
+        </li>
+        <li><a href="#%}"><i class="fa fa-search"></i> Search Profiles </a>
+        </li>
+        <li><a href="#"><i class="fa fa-calendar"></i> Upcoming Events </a>
+        </li>
+        <li><a href="#"><i class="fa fa-institution"></i> APA Guidelines </a>
+        </li>
+      </ul>
+    </div>
+    <div class="menu_section">
+       <h3>Administration</h3>
+      <ul class="nav side-menu">
+        <li><a><i class="fa fa-users"></i> User Administration <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="{% url 'racers:index' %}">Racer Profiles</a></li>
+            <li><a href="#"> Non-Racer Profiles</a></li>
+          </ul>
+        </li>
+        <li><a href="{% url 'sponsors:index' %}"><i class="fa fa-money"></i> Sponsors </a>
+        </li>
+        <li><a><i class="fa fa-anchor"></i> Boats <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="{% url 'boats:index' %}">Boats</a></li>
+            <li><a href="{% url 'boats:engines_index' %}">Engines</a></li>
+          </ul>
+        </li>
+        <li><a><i class="fa fa-globe"></i> Event Management <span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="#">View Events</a></li>
+            <li><a href="#">Suppliers</a></li>
+          </ul>
+        </li>
+        <li><a><i class="fa fa-institution"></i>APA Guidelines<span class="fa fa-chevron-down"></span></a>
+          <ul class="nav child_menu">
+            <li><a href="fixed_sidebar.html">About Us</a></li>
+            <li><a href="fixed_footer.html">Policies and Rules</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- /sidebar menu -->
+
+  <!-- /menu footer buttons -->
+  <div class="sidebar-footer hidden-small">
+    <a data-toggle="tooltip" data-placement="top" title="Settings">
+      <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+    </a>
+    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+      <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+    </a>
+    <a data-toggle="tooltip" data-placement="top" title="Lock">
+      <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+    </a>
+    <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+      <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+    </a>
+  </div>
+  <!-- /menu footer buttons -->
+</div>

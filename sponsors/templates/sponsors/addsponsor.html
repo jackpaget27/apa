@@ -1,0 +1,283 @@
+{% extends "base_site.html" %}
+{% load humanize %}
+{% block title %} New Boat {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="right_col" role="main">
+
+    <div class="page-title">
+        <div class="title_left">
+          <h3>New Sponsor</h3>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_title">
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a id="boat_edit" href="#"><i class="fa fa-pencil"></i></a>
+                  
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+          
+          <div class="x_content">
+            <div class="row">
+              <form id="boat_form" method="post" action="{% url 'sponsors:add_sponsor' %}" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Sponsor Name <span class="required">*</span>
+                  </label>
+                  <div class="col-md-4 col-sm-4 col-xs-12">
+                    <input id="id_boat_registration" name="sponsor_name" type="text" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                  <div class="col-md-1 col-sm-1 col-xs-12">
+                    <button id="btn_id" style="" type="button" class="btn btn-danger btn-round" style="width: 100%;">
+                      <span class="glyphicon glyphicon-cloud-upload"></span> Upload Logo
+                    </button>                 
+                  <input id="id_license" type="file" name="logo" multiple data-url="" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}' enctype="multipart/form-data" style="display: none;">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Contact Person <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input name="contact_person" type="text" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Telephone <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="tel" id="id_phonenumber_in" name="phonenumber_in" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">E-mail <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="email" required="required" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Address <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="address_1" required="required" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">&nbsp;
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="address_2"  class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">&nbsp;
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="address_3" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Post Code/Zip Code<span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="address_4" required="required" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Country<span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_country" name="country" required="required" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Description<span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                <textarea id="message" required="required" class="form-control" name="profile_text" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="10000" data-parsley-minlength-message="Profile must be least a 20 characters long..." data-parsley-validation-threshold="1"  onkeyup="textAreaAdjust(this)" style="overflow:hidden">
+                  </textarea>
+                </div>
+              </div>
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Website
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="website" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Facebook
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="facebook" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Twitter
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="twitter" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Instagram
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="instagram" class="form-control col-md-7 col-xs-12" >
+                  </div>
+                </div>
+                
+               
+                
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                    <button type="submit" class="btn btn-danger btn-round" id="submit_button" >Create Sponsor</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            
+        </div>
+      </div>
+    </div>   
+  </div>
+  
+
+</div>
+
+<script>
+
+
+
+</script>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- Chart.js -->
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- gauge.js -->
+  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
+  <!-- Skycons -->
+  <script src="/static/vendors/skycons/skycons.js"></script>
+  <!-- Flot -->
+  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <!-- Flot plugins -->
+  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <!-- DateJS -->
+  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- JQVMap -->
+  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
+  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+  <!-- Data Tables -->
+  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+  <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+  <!-- File Upload -->
+  <script src="/static/vendors/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+  <script src="/static/vendors/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+  <script src="/static/vendors/jquery-file-upload/js/jquery.fileupload.js"></script>
+  <script src="/static/vendors/intl-tel-input/build/js/intlTelInput.js"></script>
+  <script>
+
+  function init_countries() {
+
+    var countries = { {% for country in countries %}{{ country.code }} : "{{country.name }} [{{ country.code }}]", {% endfor %}};
+
+    var countriesArray = $.map(countries, function(value, key) {
+        return {
+            value: value,
+            data: key
+        };
+    });
+
+    // initialize autocomplete with custom appendTo
+    $('#id_country').autocomplete({
+        lookup: countriesArray
+    })
+
+  };
+
+  function textAreaAdjust(o) {
+  o.style.height = "1px";
+  o.style.height = (25+o.scrollHeight)+"px";
+};
+
+    $(document).ready(function() {
+  init_countries();
+
+    $('#btn_id').click(function(event){
+      $('#id_license').click();
+    });
+
+  $('#id_license').on('change', function(event){
+      $('#btn_id').html('<i class="fa fa-check"></i> File Uploaded');
+      $('#btn_id').removeClass('btn-danger');
+      $('#btn_id').addClass('btn-success');
+  })
+
+});
+  </script>
+
+  <script>
+    var input = document.querySelector("#id_phonenumber_in");
+
+    window.intlTelInput(input, {
+       allowDropdown: true,
+      // autoHideDialCode: false,
+      // autoPlaceholder: "off",
+      // dropdownContainer: document.body,
+      // excludeCountries: ["us"],
+      // formatOnDisplay: false,
+      hiddenInput: "phonenumber",
+      initialCountry: "gb",
+      // localizedCountries: { 'de': 'Deutschland' },
+      // nationalMode: false,
+      // onlyCountries: ['us', 'gb', 'ch', 'ca', 'do'],
+      // placeholderNumberType: "MOBILE",
+      preferredCountries: ['gb', 'hk'],
+      // separateDialCode: true,
+      utilsScript: "/static/vendors/intl-tel-input/build/js/utils.js",
+    }){% if racer.telephone_number %}.setNumber("{{ racer.telephone_number }}"){% endif %};
+    
+
+  </script>
+
+
+{% endblock javascripts %}

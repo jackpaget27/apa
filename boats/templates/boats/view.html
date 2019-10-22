@@ -1,0 +1,431 @@
+{% extends "base_site.html" %}
+{% load humanize %}
+{% block title %} {{ boat.registration }} {% endblock title %}
+
+{% block stylesheets %}
+  {{ block.super }}
+{% endblock stylesheets %}
+
+{% block content %}
+  <div class="right_col" role="main">
+    <div class="page-title">
+        <div class="title_left">
+          <h3>Boat: {{ boat.registration }}</h3>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_title">
+            <h2>Gallery</h2>
+            <ul class="nav navbar-right panel_toolbox">
+              <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"></a>
+              </li>
+              <li><a class="close-link"><i class="fa fa-close"></i></a>
+              </li>
+            </ul>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <div class="row">
+             {% for img in boat.images.all %}
+              <div class="col-md-55">
+                <div class="thumbnail">
+                  <div class="image view view-first">
+                    <img style="width: 100%; display: block;" src="{{ img.boat_image.url }}" alt="{{ img.title }}" />
+                    <div class="mask">
+                      <p>{{ img.title }}</p>
+                        <div class="tools tools-bottom">
+                          <a href="#"><i class="fa fa-pencil"></i></a>
+                          <a href="{% url 'boats:delete_boat_image' img.id %}"><i class="fa fa-times"></i></a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="caption">
+                      <p>{{ img.caption }}</p>
+                    </div>
+                </div>
+              </div>
+             {% endfor %}
+            </div>
+            <div class="row">
+              <div class="well text-muted text-center" style="padding-top: 4rem; padding-bottom: 4rem;">
+                <span class="glyphicon glyphicon-arrow-down" style="font-size: 4rem;"></span>
+                  <h3>Drop Photos Here to Upload</h3> 
+                </div>
+                <button style="width:100%; margin-top: 0;" type="button" class="btn btn-danger js-upload-photos">
+                  <span class="glyphicon glyphicon-cloud-upload"></span> Upload photos
+                </button>
+                <form id="add-photos" action="{% url 'boats:upload_boat_image' boat.id %}" enctype="multipart/form-data">
+                  
+                <input id="id_boat_image" type="file" name="boat_image" multiple style="display: none;" data-url="" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}' enctype="multipart/form-data">
+                </form>
+                
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-title">
+        <div class="title_left">
+          <h4>Boat Information</h4>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_title">
+              <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                  <a id="boat_edit" href="#"><i class="fa fa-pencil"></i></a>
+                  
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+              </ul>
+              <div class="clearfix"></div>
+            </div>
+          
+          <div class="x_content">
+            <div class="row">
+              <form id="boat_form" method="post" action="{% url 'boats:update_boat' boat.id %}" data-parsley-validate class="form-horizontal form-label-left">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Boat Registration <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="id_boat_registration" name="boat_registration" type="text" required="required" class="form-control col-md-7 col-xs-12" value="{{ boat.registration }}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Build Date <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input id="id_build_date" name="build_date" type="text" required="required" class="form-control col-md-7 col-xs-12">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Hull Colour <span class="required">*</span>
+                  </label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="text" id="id_hull_colour" name="hull_colour" required="required" class="form-control col-md-7 col-xs-12" value="{{ boat.hull_colour.colour }}">
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Owner <span class="required">*</span>
+                  </label>
+                  <div class="col-md-3 col-sm-3 col-xs-12">
+                    <input type="text" id="id_owner" name="owner" required="required" class="form-control col-md-7 col-xs-12" value="{{ boat.owner.display_name }}">
+                  </div>
+                  <label class="control-label col-md-2 col-sm-2 col-xs-12" for="first-name">Current Value <span class="required">*</span>
+                  </label>
+                  <div class="col-md-1 col-sm-1 col-xs-12">
+                    <input type="text" id="id_current_value" name="current_value" required="required" class="form-control col-md-7 col-xs-12" value="{% if boat.replacement_value %}{{ boat.replacement_value|intcomma }}{% else %} 0.00 {% endif %}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Insured</label>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <div id="gender" class="btn-group" data-toggle="buttons">
+                      <label id="yes_button" class="btn btn-default {% if boat.insured == True %}active{% endif %}" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                        <input type="radio" name="gender" value="Yes"> Yes
+                      </label>
+                      <label id="no_button" class="btn btn-default {% if boat.insured == False %}active{% endif %}" data-toggle-class="btn-primary" data-toggle-passive-class="btn-default">
+                        <input type="radio"  name="gender" value="No"> No &nbsp
+                      </label>
+                      <input id="id_insured" value="{% if boat.insured == True %}Yes{% else %}No{% endif %}" name="insured" style="display: none;">
+                    </div>
+                  </div>
+                  <label class="control-label col-md-1 col-sm-1 col-xs-12" for="first-name">Policy <span class="required">*</span></label>
+                  <div class="col-md-3 col-sm-3 col-xs-12">
+                    <input type="text" id="id_insurance_policy" name="insurance_policy" class="form-control col-md-7 col-xs-12" value="{{ boat.insurance_policy }}">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Engine Make <span class="required">*</span>
+                  </label>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <input type="text" id="first-name" required="required" disabled="disabled" class="form-control col-md-3 col-xs-12" value="{{ boat.engine.make }}">
+                  </div>
+                  <label class="control-label col-md-1 col-sm-1 col-xs-12" for="first-name">Serial <span class="required">*</span>
+                  </label>
+                  <div class="col-md-3 col-sm-3 col-xs-12">
+                    <input type="text" id="id_engine_serial" name="engine_serial" required="required" class="form-control col-md-7 col-xs-12" value="{{ boat.engine.serial_number }}">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Next Engine Service <span class="required">*</span>
+                  </label>
+                  <div class="col-md-4 col-sm-4 col-xs-12">
+                    <input type="text" id="first-name" disabled="disabled" class="form-control col-md-7 col-xs-12" value="{{ boat.engine.service_nat|naturaltime }} ({{ boat.engine.next_service|date:'d/m/Y' }})">
+                  </div>
+                  <div class="col-md-2 col-sm-2 col-xs-12">
+                    <a href="{% url 'boats:view_engine' boat.engine.id %}" class="btn btn-round btn-danger" style="width: 100%;">View Engine</a>
+                  </div>
+                </div>
+                <div id="btn-grp" style="display: none;">
+                <div class="ln_solid"></div>
+                <div class="form-group">
+                  <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+                    <button type="submit" class="btn btn-danger btn-round" id="submit_button" >Update Boat</button>
+                    <button type="submit" class="btn btn-danger btn-round" id="cancel_button" >Cancel Edit</button>
+                </div>
+                </div>
+                </div>
+              </form>
+            </div>
+            
+        </div>
+      </div>
+    </div>   
+  </div>
+  <div class="page-title">
+        <div class="title_left">
+          <h4>Service Record</h4>
+        </div>
+  </div>
+
+      <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_content">
+              <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th>Service Date</th>
+                    <th>Next Service</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+
+
+                <tbody>
+                  {% for service in services %}
+                  <tr>
+                    <td align="center">{{ service.service_date|date:"d/m/Y" }}</td>
+                    <td align="center">{{ service.next_service|date:"d/m/Y" }}</td>
+                    <td align="center">{{ service.notes }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-title">
+        <div class="title_left">
+          <h4>Sponsors</h4>
+        </div>
+  </div>
+
+  <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel tile">
+          <div class="x_content">
+              <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                <thead>
+                  <tr>
+                    <th>Service Date</th>
+                    <th>Next Service</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+
+
+                <tbody>
+                  {% for service in services %}
+                  <tr>
+                    <td>{{ service.service_date|date:"d/m/Y" }}</td>
+                    <td>{{ service.next_service|date:"d/m/Y" }}</td>
+                    <td>{{ service.notes }}</td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="modal fade" id="modal-progress" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Uploading...</h4>
+      </div>
+      <div class="modal-body">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- -->
+
+</div>
+
+<script>
+function init_colours() {
+
+    var colours = { {% for col in hull_cols %}{{ col.id}} : "{{col.colour}} [{{ col.id }}]", {% endfor %}};
+
+    var coloursArray = $.map(colours, function(value, key) {
+        return {
+            value: value,
+            data: key
+        };
+    });
+
+    // initialize autocomplete with custom appendTo
+    $('#id_hull_colour').autocomplete({
+        lookup: coloursArray
+    }).val('{{ boat.hull_colour.colour }} [{{ boat.hull_colour.id }}]').data('autocomplete');
+
+};
+
+function init_eng_ser() {
+
+    var serials = { {% for ser in eng_sers %}{{ ser.id}} : "{{ser.make}}: {{ser.serial_number}} [{{ser.id}}]", {% endfor %}};
+
+    var serialsArray = $.map(serials, function(value, key) {
+        return {
+            value: value,
+            data: key
+        };
+    });
+
+    // initialize autocomplete with custom appendTo
+    $('#id_engine_serial').autocomplete({
+        lookup: serialsArray
+    }).val('{{ boat.engine.make }}: {{ boat.engine.serial_number }} [{{boat.engine.id}}]').data('autocomplete');
+
+};
+
+function init_owners() {
+
+    var owners = { {% for own in owners %}{{ own.id}} : "{{own.display_name}} [{{ own.id }}]", {% endfor %}};
+
+    var ownersArray = $.map(owners, function(value, key) {
+        return {
+            value: value,
+            data: key
+        };
+    });
+
+    // initialize autocomplete with custom appendTo
+    $('#id_owner').autocomplete({
+        lookup: ownersArray
+    }).val('{{ boat.owner.display_name }} [{{ boat.owner.id }}]').data('autocomplete');
+
+};
+
+
+</script>
+{% endblock content %}
+
+{% block javascripts %}
+  {{ block.super}}
+  <!-- Chart.js -->
+  <script src="/static/vendors/Chart.js/dist/Chart.min.js"></script>
+  <!-- gauge.js -->
+  <script src="/static/vendors/gauge.js/dist/gauge.min.js"></script>
+  <!-- Skycons -->
+  <script src="/static/vendors/skycons/skycons.js"></script>
+  <!-- Flot -->
+  <script src="/static/vendors/Flot/jquery.flot.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.pie.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.time.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.stack.js"></script>
+  <script src="/static/vendors/Flot/jquery.flot.resize.js"></script>
+  <!-- Flot plugins -->
+  <script src="/static/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+  <script src="/static/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+  <script src="/static/vendors/flot.curvedlines/curvedLines.js"></script>
+  <!-- DateJS -->
+  <script src="/static/vendors/DateJS/build/date.js"></script>
+  <!-- JQVMap -->
+  <script src="/static/vendors/jqvmap/dist/jquery.vmap.js"></script>
+  <script src="/static/vendors/jqvmap/dist/maps/jquery.vmap.world.js"></script>
+  <script src="/static/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"></script>
+  <!-- Data Tables -->
+  <script src="/static/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="/static/vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="/static/vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="/static/vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+  <script src="/static/vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="/static/vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+  <script src="/static/vendors/datatables.net-scroller/js/dataTables.scroller.min.js"></script>
+  <script src="/static/vendors/jszip/dist/jszip.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/pdfmake.min.js"></script>
+  <script src="/static/vendors/pdfmake/build/vfs_fonts.js"></script>
+  <!-- File Upload -->
+  <script src="/static/vendors/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+  <script src="/static/vendors/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+  <script src="/static/vendors/jquery-file-upload/js/jquery.fileupload.js"></script>
+
+  <script>
+    $(document).ready(function() {
+  init_colours();
+  init_eng_ser();
+  init_owners();
+
+  $('#id_boat_registration').attr("disabled", "disabled");
+  $('#id_build_date').attr("disabled", "disabled");
+  $('#id_hull_colour').attr("disabled", "disabled");
+  $('#id_owner').attr("disabled", "disabled");
+  $('#id_engine_serial').attr("disabled", "disabled");
+  $('#id_insurance_policy').attr("disabled", "disabled");
+  $('#id_current_value').attr("disabled", "disabled");
+
+  $("#boat_edit").button().click(function(event){
+        event.preventDefault()
+        $('#id_boat_registration').removeAttr("disabled");
+        $('#id_hull_colour').removeAttr("disabled");
+        $('#id_owner').removeAttr("disabled");
+        $('#id_insurance_policy').removeAttr("disabled");
+        $('#id_current_value').removeAttr("disabled");
+        $('#id_engine_serial').removeAttr("disabled");
+        $('#id_build_date').removeAttr("disabled");
+        $('#btn-grp').show();
+    });
+
+    $("#cancel_button").button().click(function(event){
+        event.preventDefault()
+        $('#id_boat_registration').attr("disabled", "disabled");
+        $('#id_hull_colour').attr("disabled", "disabled");
+        $('#id_owner').attr("disabled", "disabled");
+        $('#id_engine_serial').attr("disabled", "disabled");
+        $('#id_insurance_policy').attr("disabled", "disabled");
+        $('#id_current_value').attr("disabled", "disabled");
+        $('#id_build_date').attr("disabled", "disabled");
+        $('#btn-grp').hide();
+    });
+
+    $("#no_button").on("click", function(event) {
+        $('#id_insured').val("No")  
+    });
+
+    $("#yes_button").on("click", function(event) {
+        $('#id_insured').val("Yes")  
+    });
+});
+  </script>
+
+{% endblock javascripts %}
